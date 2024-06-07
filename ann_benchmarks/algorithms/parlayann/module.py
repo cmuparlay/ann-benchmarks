@@ -10,12 +10,12 @@ from ..base.module import BaseANN
 
 class ParlayANN(BaseANN):
     def __init__(self, metric, index_params):
-        self.name = "parlayann"
+        self.name = "parlayann_(" + str(index_params) + ")"
         self._index_params = index_params
         self._metric = self.translate_dist_fn(metric)
 
-        self.R = int(index_params.get("R", 64)
-        self.L = int(index_params.get("L", 128)
+        self.R = int(index_params.get("R", 50))
+        self.L = int(index_params.get("L", 100))
         self.alpha = float(index_params.get("alpha", 1.15))
         self.two_pass = bool(index_params.get("two_pass", False))
 
@@ -68,8 +68,7 @@ class ParlayANN(BaseANN):
         print("Index loaded")
 
     def query(self, X, k):
-        ngh, distances = self.index.single_search(X, k, self.Q, True, self.limit)
-        return ngh
+        return self.index.single_search(X, k, self.Q, True, self.limit)
 
     def batch_query(self, X, k):
         print("running batch")
@@ -78,6 +77,7 @@ class ParlayANN(BaseANN):
         return self.res
 
     def set_query_arguments(self, query_args):
+        self.name = "parlayann_(" + str(self._index_params) + "," + str(query_args) + ")"
         print(query_args)
-        self.limit = -1 if query_args.get("limit") is None else query_args.get("limit")
-        self.Q = self.limit if query_args.get("Q") is None else query_args.get("Q")
+        self.limit = 1000 if query_args.get("limit") is None else query_args.get("limit")
+        self.Q = 10 if query_args.get("Q") is None else query_args.get("Q")

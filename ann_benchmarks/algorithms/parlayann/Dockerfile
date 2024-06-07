@@ -10,7 +10,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt install -y git make cmake g++ libaio-dev 
 #RUN apt-get install -y g++ software-properties-common
 RUN pip3 install pybind11 numpy
 
-ARG CACHEBUST=4
+ARG CACHEBUST=6
 RUN git clone -b annbench https://github.com/cmuparlay/ParlayANN.git 
 RUN cd ParlayANN && git submodule update --init --recursive
 RUN cd ParlayANN/python && bash compile.sh
